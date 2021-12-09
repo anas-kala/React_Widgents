@@ -3,9 +3,21 @@ import React, { Component, useEffect, useState } from 'react';
 
 const Search = () => {
     const [term, setTerm] = useState('programming');
+    const [debouncedTerm, setDebouncedTerm] = useState(term);
     const [results, setResults] = useState([]);
 
-    console.log(results);
+
+    useEffect(() => {
+        const timerId = setTimeout(() => {
+            setDebouncedTerm(term);
+
+            // inside the useEffect() you can return a method which is called only by the second rendering of the Component. this method is normally used for cleaning resources of the first rendering
+            return () => {
+                clearTimeout(timerId);
+            }
+        }, 1000);
+    }, [term]);
+
     useEffect(() => {
         const search = async () => {
             const { data } = await axios.get('https://en.wikipedia.org/w/api.php', {
@@ -14,29 +26,15 @@ const Search = () => {
                     list: 'search',
                     origin: '*',
                     format: 'json',
-                    srsearch: term,
+                    srsearch: debouncedTerm,
                 },
             });
             setResults(data.query.search);
         };
 
-        if (term && !results.length) {
-            search();
-        } else {
-            const timeoutId = setTimeout(() => {
-                if (term) {
-                    search();
-                }
-            }, 500);
-            // inside the useEffect() you can return a method which is called only by the second rendering of the Component. this method is normally used for cleaning resources of the first rendering
-            return () => {
-                clearTimeout(timeoutId);
-            };
-        }
+        search();
 
-
-
-    }, [term]);
+    }, [debouncedTerm]);
 
     const renderedResults = results.map((result) => {
         return (
