@@ -1,8 +1,7 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useState } from 'react';
-import { useEffect } from 'react/cjs/react.development';
 
-const DropDown = ({ options, selected, onSelectedChange }) => {
+const DropDown = ({ label, options, selected, onSelectedChange }) => {
     const [open, setOpen] = useState(false);
     const [selectedColor, setSelectedColor] = useState(selected.value);
     const ref = useRef();
@@ -55,8 +54,8 @@ const DropDown = ({ options, selected, onSelectedChange }) => {
         <div className="ui form" ref={ref}>
             <div className="field">
                 <label className="label">
+                    {label}
                 </label>
-                Select a color
                 <div className={`ui selection dropdown ${open ? 'visible active' : ''}`} onClick={() => setOpen(!open)}>
                     <i className="dropdown icon"></i>
                     <div className="text">
@@ -66,7 +65,11 @@ const DropDown = ({ options, selected, onSelectedChange }) => {
                         {renderedOptions}
                     </div>
                 </div>
-                <h1 style={{ color: `${selectedColor}` }}>Text</h1>
+                {
+                    (selectedColor === 'red' || selected === 'green' || selectedColor === 'blue') ?
+                        (< h1 style={{ color: `${selectedColor}` }}>Text</h1>)
+                        : null
+                }
             </div>
         </div >
     );
