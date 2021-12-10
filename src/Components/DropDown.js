@@ -4,6 +4,7 @@ import { useEffect } from 'react/cjs/react.development';
 
 const DropDown = ({ options, selected, onSelectedChange }) => {
     const [open, setOpen] = useState(false);
+    const [selectedColor, setSelectedColor] = useState(selected.value);
     const ref = useRef();
 
     // in order to close the dorpdown list when the user clicks outside it, we have to set
@@ -41,7 +42,11 @@ const DropDown = ({ options, selected, onSelectedChange }) => {
             return null;
         }
         return (
-            <div key={option.value} className="item" onClick={() => onSelectedChange(option)}>
+            <div key={option.value} className="item" onClick={() => {
+                onSelectedChange(option);
+                setSelectedColor(option.value)
+            }
+            }>
                 {option.label}
             </div>
         );
@@ -61,6 +66,7 @@ const DropDown = ({ options, selected, onSelectedChange }) => {
                         {renderedOptions}
                     </div>
                 </div>
+                <h1 style={{ color: `${selectedColor}` }}>Text</h1>
             </div>
         </div >
     );
